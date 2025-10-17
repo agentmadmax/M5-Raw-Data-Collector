@@ -1,7 +1,7 @@
-#ifndef SECRETS_H
-#define SECRETS_H
+#ifndef SECRETS_EXAMPLE_H
+#define SECRETS_EXAMPLE_H
 
-// Declare only (no values here)
+// Example credentials — users must rename this to secrets.h and edit their own
 extern const char* EAP_SSID;
 extern const char* EAP_USERNAME;
 extern const char* EAP_PASSWORD;
