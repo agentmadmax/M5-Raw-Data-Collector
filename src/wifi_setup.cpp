@@ -2,10 +2,6 @@
 #include "config.h"
 #include "web_server.h"
 #include "secrets.h"
-// Define once here
-const char* EAP_SSID     = "PAWS-Secure";
-const char* EAP_USERNAME = "sc30598";
-const char* EAP_PASSWORD = "Madmax123@";
 
 
 char mqtt_server[40] = "20.172.67.240";
