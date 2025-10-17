@@ -1,4 +1,12 @@
+### Setup Instructions
+
+1. Copy `include/secrets_example.h` → rename it to `include/secrets.h`
+2. Edit it with your Wi-Fi SSID, username, and password.
+3. Build and upload to your M5StickC Plus 2 via PlatformIO.
+
+
 # M5 Raw Data Collector (MPU6886 + EMG + MQTT)
+
 
 ESP32/M5StickC Plus 2 firmware that:
 - Configures the MPU6886 IMU at ±2g and ±1000 dps
