@@ -1,9 +1,15 @@
-
 #include "config.h"
 #include "web_server.h"
 #include "secrets.h"
 
+#include <WiFi.h>
+#include "esp_wpa2.h"
+#include "esp_wifi.h"
+#include <WiFiManager.h>
+#include <PubSubClient.h>
+#include <M5Unified.h>
 
+// --- Global Variables ---
 char mqtt_server[40] = "20.172.67.240";
 
 AsyncWebServer server(HTTP_PORT);
@@ -14,10 +20,11 @@ String         client_id;
 uint8_t active_state = STATE_IDLE;
 int     sampling_frequency = DEFAULT_SAMPLING_HZ;
 
+// --- MQTT Reconnect ---
 bool reconnect_mqtt() {
   Serial.print("Attempting MQTT connection...");
   if (mqttClient.connect(client_id.c_str())) {
-    Serial.println("connected");
+    Serial.println("connected ✅");
     drawDisplay();
     return true;
   }
@@ -25,6 +32,7 @@ bool reconnect_mqtt() {
   return false;
 }
 
+// --- Reset WiFi ---
 void reset_wifi_settings() {
   esp_wifi_restore();
   M5.Display.fillScreen(TFT_BLACK);
@@ -35,6 +43,7 @@ void reset_wifi_settings() {
   ESP.restart();
 }
 
+// --- WiFi Setup ---
 void setup_wifi() {
   M5.Display.fillScreen(TFT_BLACK);
   M5.Display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -45,6 +54,7 @@ void setup_wifi() {
   WiFi.disconnect(true);
   WiFi.mode(WIFI_STA);
 
+  // WPA2 Enterprise (University Network)
   if (strlen(EAP_USERNAME) > 0 && strlen(EAP_PASSWORD) > 0) {
     esp_wifi_sta_wpa2_ent_set_identity((uint8_t *)EAP_USERNAME, strlen(EAP_USERNAME));
     esp_wifi_sta_wpa2_ent_set_username((uint8_t *)EAP_USERNAME, strlen(EAP_USERNAME));
@@ -66,8 +76,8 @@ void setup_wifi() {
     delay(300);
   }
 
+  // --- Fallback: WiFiManager Setup Portal ---
   if (WiFi.status() != WL_CONNECTED) {
-    // WiFiManager fallback portal
     M5.Display.fillScreen(TFT_BLACK);
     M5.Display.setTextSize(1.8);
     M5.Display.setCursor(5, 10);
@@ -100,15 +110,15 @@ void setup_wifi() {
     }
 
     strncpy(mqtt_server, custom_mqtt_server.getValue(), sizeof(::mqtt_server)-1);
-    mqtt_server[sizeof(::mqtt_server)-1]=0;
+    mqtt_server[sizeof(::mqtt_server)-1] = 0;
   }
 
+  // --- Connection Success ---
   M5.Display.println("\n\nConnected!");
   delay(600);
 
-  // MQTT client id
-  client_id = "M5-HumanLogger-";
-  client_id += WiFi.macAddress();
+  // MQTT Client Setup
+  client_id = "M5-HumanLogger-" + WiFi.macAddress();
   client_id.replace(":", "");
   mqttClient.setServer(mqtt_server, 1883);
 }

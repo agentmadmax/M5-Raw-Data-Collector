@@ -1,9 +1,9 @@
-#ifndef SECRETS_EXAMPLE_H
-#define SECRETS_EXAMPLE_H
+#pragma once
 
-// Example credentials — users must rename this to secrets.h and edit their own
-extern const char* EAP_SSID;
-extern const char* EAP_USERNAME;
-extern const char* EAP_PASSWORD;
+// Template file — fill these in and rename to secrets.h
 
-#endif
+const char* EAP_SSID     = "YOUR_WIFI_SSID";
+const char* EAP_USERNAME = "YOUR_USERNAME";
+const char* EAP_PASSWORD = "YOUR_PASSWORD";
+const char* MQTT_USER    = "";
+const char* MQTT_PASS    = "";
