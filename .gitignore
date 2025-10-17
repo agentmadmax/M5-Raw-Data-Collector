@@ -1,0 +1,13 @@
+# PlatformIO build files
+.pio/
+.vscode/
+
+# Mac / Windows temp files
+.DS_Store
+Thumbs.db
+
+# Ignore all libraries (PlatformIO handles them)
+lib/
+
+# Ignore credentials or private headers
+include/secrets.h
