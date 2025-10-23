@@ -1,9 +1,12 @@
 
 #include "imu.h"
 
-float accel_range_g = 2.0f;
-float gyro_range_dps = 1000.0f;
+float accel_range_g = 2.0f; // 2,4,8,16 g 
+float gyro_range_dps = 1000.0f; // 250,500,1000,2000 dps
 
+//float accel_scale_factor = 1.0f / 2048.0f; // default for ±16g
+//float accel_scale_factor = 1.0f / 4096.0f; // default for ±8g
+//float accel_scale_factor = 1.0f / 8192.0f; // default for ±4g
 float accel_scale_factor = 1.0f / 16384.0f; // default for ±2g
 float gyro_scale_factor  = 1000.0f / 32768.0f;
 

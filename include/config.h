@@ -67,3 +67,7 @@ extern int     sampling_frequency;
 #ifndef EMG_SENSOR_PIN
   #define EMG_SENSOR_PIN 32
 #endif
+// --- Eduroam WPA2-Enterprise credentials ---
+#define EAP_IDENTITY  "your_id@university.edu"     // outer identity (often same as username)
+#define EAP_USERNAME  "your_id@university.edu"     // full username with domain
+#define EAP_PASSWORD  "your_eduroam_password"      // your eduroam password
