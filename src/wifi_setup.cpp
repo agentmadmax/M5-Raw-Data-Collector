@@ -10,7 +10,7 @@
 #include <M5Unified.h>
 
 // --- Global Variables ---
-char mqtt_server[40] = "20.172.67.240";
+char mqtt_server[40] = "use your own";
 
 AsyncWebServer server(HTTP_PORT);
 WiFiClient     espClient;
