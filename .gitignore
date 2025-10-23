@@ -11,5 +11,4 @@ lib/
 
 # Ignore credentials or private headers
 include/secrets.h
-
 src/secrets.cpp
