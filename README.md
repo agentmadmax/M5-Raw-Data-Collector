@@ -9,7 +9,7 @@
 
 
 ESP32/M5StickC Plus 2 firmware that:
-- Configures the MPU6886 IMU at ±(2,4,8,26)g and ±(250,500,1000,2000) dps(uncomment the sensitivity you want to use in /include imu.h) 
+- Configures the MPU6886 IMU at ±(2,4,8,26)g and ±(250,500,1000,2000) dps(uncomment the sensitivity you want to use in /src imu.cpp) 
 - Calibrates accel/gyro on boot
 - Streams raw (and calibrated) IMU + EMG data via MQTT
 - Serves a small web UI for status + settings
