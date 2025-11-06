@@ -11,6 +11,8 @@
 
 // --- Global Variables ---
 char mqtt_server[40] = "20.172.67.240";
+const char* mqtt_username = "sahas";
+const char* mqtt_password = "47521452";   // <-- your password
 
 AsyncWebServer server(HTTP_PORT);
 WiFiClient     espClient;
@@ -23,13 +25,15 @@ int     sampling_frequency = DEFAULT_SAMPLING_HZ;
 // --- MQTT Reconnect ---
 bool reconnect_mqtt() {
   Serial.print("Attempting MQTT connection...");
-  if (mqttClient.connect(client_id.c_str())) {
+  // connect(clientID, username, password)
+  if (mqttClient.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
     Serial.println("connected ✅");
     drawDisplay();
     return true;
+  } else {
+    Serial.printf("failed, rc=%d\n", mqttClient.state());
+    return false;
   }
-  Serial.printf("failed, rc=%d\n", mqttClient.state());
-  return false;
 }
 
 // --- Reset WiFi ---
@@ -117,8 +121,17 @@ void setup_wifi() {
   M5.Display.println("\n\nConnected!");
   delay(600);
 
+  // 🔋 Keep Wi-Fi fully awake (prevents keep-alive timeouts)
+  WiFi.setSleep(false);                 // Arduino helper
+  esp_wifi_set_ps(WIFI_PS_NONE);        // Ensure power-save is OFF
+
   // MQTT Client Setup
   client_id = "M5-HumanLogger-" + WiFi.macAddress();
   client_id.replace(":", "");
   mqttClient.setServer(mqtt_server, 1883);
+
+  // 🔁 Longer keep-alive + a bit more socket slack
+  mqttClient.setKeepAlive(30);          // was 15
+  mqttClient.setSocketTimeout(10);      // default ~15; 10 is fine here
+  mqttClient.setBufferSize(8192);       // already had this
 }

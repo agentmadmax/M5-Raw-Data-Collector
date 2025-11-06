@@ -16,3 +16,4 @@ struct RawPayload {
 extern RawPayload payload_buffer;
 
 void handleHumanDataCollection();
+void start_raw_mode_tasks();
