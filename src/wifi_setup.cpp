@@ -9,10 +9,10 @@
 #include <PubSubClient.h>
 #include <M5Unified.h>
 
-// --- Global Variables ---
-char mqtt_server[40] = "20.172.67.240";
-const char* mqtt_username = "sahas";
-const char* mqtt_password = "47521452";   // <-- your password
+//  Global Variables 
+char mqtt_server[40] = "use you own";
+const char* mqtt_username = "";
+const char* mqtt_password = "";   // your password
 
 AsyncWebServer server(HTTP_PORT);
 WiFiClient     espClient;
@@ -22,12 +22,12 @@ String         client_id;
 uint8_t active_state = STATE_IDLE;
 int     sampling_frequency = DEFAULT_SAMPLING_HZ;
 
-// --- MQTT Reconnect ---
+//  MQTT Reconnect 
 bool reconnect_mqtt() {
   Serial.print("Attempting MQTT connection...");
   // connect(clientID, username, password)
   if (mqttClient.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
-    Serial.println("connected ✅");
+    Serial.println("connected ");
     drawDisplay();
     return true;
   } else {
@@ -36,7 +36,7 @@ bool reconnect_mqtt() {
   }
 }
 
-// --- Reset WiFi ---
+//  Reset WiFi 
 void reset_wifi_settings() {
   esp_wifi_restore();
   M5.Display.fillScreen(TFT_BLACK);
@@ -47,7 +47,7 @@ void reset_wifi_settings() {
   ESP.restart();
 }
 
-// --- WiFi Setup ---
+//  WiFi Setup 
 void setup_wifi() {
   M5.Display.fillScreen(TFT_BLACK);
   M5.Display.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -80,7 +80,7 @@ void setup_wifi() {
     delay(300);
   }
 
-  // --- Fallback: WiFiManager Setup Portal ---
+  //  Fallback: WiFiManager Setup Portal 
   if (WiFi.status() != WL_CONNECTED) {
     M5.Display.fillScreen(TFT_BLACK);
     M5.Display.setTextSize(1.8);
@@ -117,21 +117,21 @@ void setup_wifi() {
     mqtt_server[sizeof(::mqtt_server)-1] = 0;
   }
 
-  // --- Connection Success ---
+  //  Connection Success 
   M5.Display.println("\n\nConnected!");
   delay(600);
 
-  // 🔋 Keep Wi-Fi fully awake (prevents keep-alive timeouts)
-  WiFi.setSleep(false);                 // Arduino helper
-  esp_wifi_set_ps(WIFI_PS_NONE);        // Ensure power-save is OFF
+  
+  WiFi.setSleep(false);                 
+  esp_wifi_set_ps(WIFI_PS_NONE);        
 
   // MQTT Client Setup
   client_id = "M5-HumanLogger-" + WiFi.macAddress();
   client_id.replace(":", "");
   mqttClient.setServer(mqtt_server, 1883);
 
-  // 🔁 Longer keep-alive + a bit more socket slack
-  mqttClient.setKeepAlive(30);          // was 15
-  mqttClient.setSocketTimeout(10);      // default ~15; 10 is fine here
-  mqttClient.setBufferSize(8192);       // already had this
+
+  mqttClient.setKeepAlive(30);          
+  mqttClient.setSocketTimeout(10);      
+  mqttClient.setBufferSize(8192);       
 }
