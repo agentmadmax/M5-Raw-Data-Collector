@@ -9,7 +9,7 @@
 #include <freertos/task.h>
 #include <freertos/queue.h>
 
-// ===== externs from config.h =====
+//  externs from config.h 
 extern PubSubClient mqttClient;
 extern String client_id;
 extern uint8_t active_state;
@@ -20,9 +20,9 @@ static RawPayload bufA, bufB;
 static RawPayload* volatile fillBuf = &bufA;
 static QueueHandle_t readyQ = nullptr;
 
-// ---------------------------------------------------------------------------
+
 // Helper: Quantize timestamp in nanoseconds to sampling interval
-// ---------------------------------------------------------------------------
+
 static inline uint64_t getQuantizedTimestampNs(uint16_t samplingHz) {
   struct timeval tv;
   gettimeofday(&tv, nullptr);
@@ -31,9 +31,9 @@ static inline uint64_t getQuantizedTimestampNs(uint16_t samplingHz) {
   return (ts_ns / interval_ns) * interval_ns;
 }
 
-// ---------------------------------------------------------------------------
+
 // Sampling Task  (runs on Core 0, high priority)
-// ---------------------------------------------------------------------------
+
 static void samplingTask(void* /*param*/) {
   for (;;) {
     uint16_t fs = (sampling_frequency > 0) ? sampling_frequency : DEFAULT_SAMPLING_HZ;
@@ -71,20 +71,20 @@ static void samplingTask(void* /*param*/) {
 
       b->emg_data[i] = (active_state & EMG_BIT) ? analogRead(EMG_SENSOR_PIN) : 0;
 
-      if ((i % 8) == 0) taskYIELD();  // let Wi-Fi breathe
+      if ((i % 8) == 0) taskYIELD();  
     }
 
     RawPayload* completed = b;
     fillBuf = (completed == &bufA) ? &bufB : &bufA;
     xQueueSend(readyQ, &completed, portMAX_DELAY);
 
-    vTaskDelay(1); // minimal pause to let lower-priority tasks run
+    vTaskDelay(1); 
   }
 }
 
-// ---------------------------------------------------------------------------
+
 // Publish Task  (runs on Core 0, medium priority)
-// ---------------------------------------------------------------------------
+
 static void publishTask(void* /*param*/) {
   char topic[96];
   snprintf(topic, sizeof(topic), "human/%s/raw_binary", client_id.c_str());
@@ -105,16 +105,16 @@ static void publishTask(void* /*param*/) {
   }
 }
 
-// ---------------------------------------------------------------------------
+
 // Compatibility shim (legacy call)
-// ---------------------------------------------------------------------------
+
 void handleHumanDataCollection() {
-  // No-op: handled by FreeRTOS tasks
+
 }
 
-// ---------------------------------------------------------------------------
+
 // Start both tasks on Core 0 (keep Core 1 free for UI/OTA/buttons)
-// ---------------------------------------------------------------------------
+
 void start_raw_mode_tasks() {
   if (!readyQ) readyQ = xQueueCreate(4, sizeof(RawPayload*));
 
